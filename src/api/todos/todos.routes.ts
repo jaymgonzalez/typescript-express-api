@@ -1,15 +1,11 @@
 import { Router, Request, Response } from 'express'
-import Todo from './todos.model'
+import { Todos, TodoWithId } from './todos.model'
 
 const router = Router()
 
-router.get('/', (req: Request, res: Response<Todo[]>) => {
-  res.json([
-    {
-      content: 'WOW',
-      done: false,
-    },
-  ])
+router.get('/', async (req: Request, res: Response<TodoWithId[]>) => {
+  const result = Todos.find()
+  res.json(await result.toArray())
 })
 
 export default router
