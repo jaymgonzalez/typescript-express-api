@@ -82,8 +82,8 @@ export async function updateOne(
 }
 
 export async function deleteOne(
-  req: Request<ParamsWithId, {}, TodoWithId>,
-  res: Response<TodoWithId>,
+  req: Request<ParamsWithId, {}, {}>,
+  res: Response<{}>,
   next: NextFunction
 ) {
   try {
@@ -95,7 +95,7 @@ export async function deleteOne(
       res.status(404)
       throw new Error(`Todo with ID "${req.params.id}" not found`)
     }
-    res.json(result.value)
+    res.status(204).end()
   } catch (err) {
     next(err)
   }

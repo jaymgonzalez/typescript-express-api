@@ -10,7 +10,7 @@ beforeAll(async () => {
 })
 
 describe('GET /api/v1/todos', () => {
-  it('responds with an array of todos', async () =>
+  it('respondss with an array of todos', async () =>
     request(app)
       .get('/api/v1/todos')
       .set('Accept', 'application/json')
@@ -23,7 +23,7 @@ describe('GET /api/v1/todos', () => {
 })
 
 describe('POST /api/v1/todos', () => {
-  it('respond with an error if the todo is invalid', async () =>
+  it('responds with an error if the todo is invalid', async () =>
     request(app)
       .post('/api/v1/todos')
       .set('Accept', 'application/json')
@@ -39,7 +39,7 @@ describe('POST /api/v1/todos', () => {
 
 let id: string = ''
 describe('POST /api/v1/todos', () => {
-  it('respond with an inserted object', async () =>
+  it('responds with an inserted object', async () =>
     request(app)
       .post('/api/v1/todos')
       .set('Accept', 'application/json')
@@ -60,7 +60,7 @@ describe('POST /api/v1/todos', () => {
 })
 
 describe('GET /api/v1/todos/:id', () => {
-  it('respond with a single todo', async () =>
+  it('responds with a single todo', async () =>
     request(app)
       .get(`/api/v1/todos/${id}`)
       .set('Accept', 'application/json')
@@ -75,7 +75,7 @@ describe('GET /api/v1/todos/:id', () => {
         expect(response.body.done).toBe(false)
       }))
 
-  it('respond with an invalid object ID error', (done) => {
+  it('responds with an invalid object ID error', (done) => {
     request(app)
       .get('/api/v1/todos/invalid-id')
       .set('Accept', 'application/json')
@@ -83,7 +83,7 @@ describe('GET /api/v1/todos/:id', () => {
       .expect(422, done)
   })
 
-  it('respond with a not found error', (done) => {
+  it('responds with a not found error', (done) => {
     request(app)
       .get('/api/v1/todos/632d617419847fa1f664d174')
       .set('Accept', 'application/json')
@@ -93,7 +93,7 @@ describe('GET /api/v1/todos/:id', () => {
 })
 
 describe('PUT /api/v1/todos/:id', () => {
-  it('respond with a single todo', async () =>
+  it('responds with a single todo', async () =>
     request(app)
       .put(`/api/v1/todos/${id}`)
       .set('Accept', 'application/json')
@@ -112,7 +112,7 @@ describe('PUT /api/v1/todos/:id', () => {
         expect(response.body.done).toBe(true)
       }))
 
-  it('respond with an invalid object ID error', (done) => {
+  it('responds with an invalid object ID error', (done) => {
     request(app)
       .put('/api/v1/todos/invalid-id')
       .set('Accept', 'application/json')
@@ -120,7 +120,7 @@ describe('PUT /api/v1/todos/:id', () => {
       .expect(422, done)
   })
 
-  it('respond with a not found error', (done) => {
+  it('responds with a not found error', (done) => {
     request(app)
       .put('/api/v1/todos/632d617419847fa1f664d174')
       .set('Accept', 'application/json')
@@ -129,6 +129,35 @@ describe('PUT /api/v1/todos/:id', () => {
         done: true,
       })
       .expect('Content-Type', /html/)
+      .expect(404, done)
+  })
+})
+
+describe('DELETE /api/v1/todos/:id', () => {
+  it('responds with an invalid object ID error', (done) => {
+    request(app)
+      .delete('/api/v1/todos/invalid-id')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /html/)
+      .expect(422, done)
+  })
+
+  it('responds with a not found error', (done) => {
+    request(app)
+      .delete('/api/v1/todos/632d617419847fa1f664d174')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /html/)
+      .expect(404, done)
+  })
+
+  it('responds with a 204 status code', (done) => {
+    request(app).delete(`/api/v1/todos/${id}`).expect(204, done)
+  })
+
+  it('responds with a not found error', (done) => {
+    request(app)
+      .get(`/api/v1/todos/${id}`)
+      .set('Accept', 'application/json')
       .expect(404, done)
   })
 })
