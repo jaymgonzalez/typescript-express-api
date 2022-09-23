@@ -73,3 +73,6 @@ typings/
 .serverless
 
 dist
+
+#mongoDb data
+db-data
