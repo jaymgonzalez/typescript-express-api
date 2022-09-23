@@ -58,14 +58,28 @@ export async function updateOne(
   res: Response<TodoWithId>,
   next: NextFunction
 ) {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const _id = new ObjectId(req.params.id)
   try {
-    // const insertResult = await Todos.insertOne(req.body)
-    // if (!insertResult.acknowledged) throw new Error('Error inserting ToDo')
-    // res.status(201)
-    // res.json({
-    //   _id: insertResult.insertedId,
-    //   ...req.body,
-    // })
+    const result = await Todos.updateOne(
+      {
+        _id,
+      },
+      {
+        $set: req.body,
+      }
+    )
+    if (result.matchedCount === 0) {
+      res.status(404)
+      throw new Error(`Todo with ID "${req.params.id}" not found`)
+    }
+    if (!result.acknowledged) {
+      throw new Error(`Error updating Todo with ID "${req.params.id}".`)
+    }
+    res.json({
+      _id,
+      ...req.body,
+    })
   } catch (err) {
     next(err)
   }
