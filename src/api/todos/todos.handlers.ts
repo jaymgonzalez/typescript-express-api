@@ -59,27 +59,23 @@ export async function updateOne(
   next: NextFunction
 ) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const _id = new ObjectId(req.params.id)
   try {
-    const result = await Todos.updateOne(
+    const result = await Todos.findOneAndUpdate(
       {
-        _id,
+        _id: new ObjectId(req.params.id),
       },
       {
         $set: req.body,
+      },
+      {
+        returnDocument: 'after',
       }
     )
-    if (result.matchedCount === 0) {
+    if (!result.value) {
       res.status(404)
       throw new Error(`Todo with ID "${req.params.id}" not found`)
     }
-    if (!result.acknowledged) {
-      throw new Error(`Error updating Todo with ID "${req.params.id}".`)
-    }
-    res.json({
-      _id,
-      ...req.body,
-    })
+    res.json(result.value)
   } catch (err) {
     next(err)
   }
