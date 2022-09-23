@@ -9,8 +9,8 @@ export async function findAll(
   next: NextFunction
 ) {
   try {
-    const result = Todos.find()
-    res.json(await result.toArray())
+    const result = Todos.find().toArray()
+    res.json(await result)
   } catch (err) {
     next(err)
   }
