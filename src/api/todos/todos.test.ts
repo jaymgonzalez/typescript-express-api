@@ -45,7 +45,7 @@ describe('POST /api/v1/todos', () => {
       .set('Accept', 'application/json')
       .send({
         content: 'Learn TypeScript',
-        done: true,
+        done: false,
       })
       .expect('Content-Type', /json/)
       .expect(201)
@@ -55,7 +55,7 @@ describe('POST /api/v1/todos', () => {
         expect(response.body).toHaveProperty('content')
         expect(response.body.content).toBe('Learn TypeScript')
         expect(response.body).toHaveProperty('done')
-        expect(response.body.done).toBe(true)
+        expect(response.body.done).toBe(false)
       }))
 })
 
@@ -72,7 +72,7 @@ describe('GET /api/v1/todos/:id', () => {
         expect(response.body).toHaveProperty('content')
         expect(response.body.content).toBe('Learn TypeScript')
         expect(response.body).toHaveProperty('done')
-        expect(response.body.done).toBe(true)
+        expect(response.body.done).toBe(false)
       }))
 
   it('respond with an invalid object ID error', (done) => {
@@ -87,6 +87,47 @@ describe('GET /api/v1/todos/:id', () => {
     request(app)
       .get('/api/v1/todos/632d617419847fa1f664d174')
       .set('Accept', 'application/json')
+      .expect('Content-Type', /html/)
+      .expect(404, done)
+  })
+})
+
+describe('PUT /api/v1/todos/:id', () => {
+  it('respond with a single todo', async () =>
+    request(app)
+      .put(`/api/v1/todos/${id}`)
+      .set('Accept', 'application/json')
+      .send({
+        content: 'Learn TypeScript',
+        done: true,
+      })
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveProperty('_id')
+        expect(response.body._id).toBe(id)
+        expect(response.body).toHaveProperty('content')
+        expect(response.body.content).toBe('Learn TypeScript')
+        expect(response.body).toHaveProperty('done')
+        expect(response.body.done).toBe(true)
+      }))
+
+  it('respond with an invalid object ID error', (done) => {
+    request(app)
+      .put('/api/v1/todos/invalid-id')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /html/)
+      .expect(422, done)
+  })
+
+  it('respond with a not found error', (done) => {
+    request(app)
+      .put('/api/v1/todos/632d617419847fa1f664d174')
+      .set('Accept', 'application/json')
+      .send({
+        content: 'Learn TypeScript',
+        done: true,
+      })
       .expect('Content-Type', /html/)
       .expect(404, done)
   })

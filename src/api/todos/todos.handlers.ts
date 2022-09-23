@@ -52,3 +52,21 @@ export async function findOne(
     next(err)
   }
 }
+
+export async function updateOne(
+  req: Request<ParamsWithId, TodoWithId, Todo>,
+  res: Response<TodoWithId>,
+  next: NextFunction
+) {
+  try {
+    // const insertResult = await Todos.insertOne(req.body)
+    // if (!insertResult.acknowledged) throw new Error('Error inserting ToDo')
+    // res.status(201)
+    // res.json({
+    //   _id: insertResult.insertedId,
+    //   ...req.body,
+    // })
+  } catch (err) {
+    next(err)
+  }
+}
